@@ -47,135 +47,123 @@ os.makedirs("data", exist_ok=True)
 # ----------------------------------
 # INFLAÇÃO (BACEN - SGS)
 # ----------------------------------
-def get_ipca_12m():
-    df = sgs.get({"ipca_12m": 433})
-    return df["ipca_12m"].iloc[-1] / 100
 
+import yfinance as yf
+import pandas as pd
+import numpy as np
+import json
+from pathlib import Path
+from datetime import datetime
+from bcb import sgs
 
-def get_ipca_5y(ipca_12m):
-    return (1 + ipca_12m) ** 5 - 1
-
-
-IPCA_12M = get_ipca_12m()
-IPCA_5Y = get_ipca_5y(IPCA_12M)
-
-# ----------------------------------
-# DADOS DE MERCADO
-# ----------------------------------
-def load_data(ticker):
-    df = yf.download(
-        ticker,
-        period="6y",
-        interval="1d",
-        auto_adjust=True,
-        progress=False
-    )
-    return df[["Close"]].dropna()
-
-
-def calc_return(df, days):
-    if len(df) < days:
-        return np.nan
-    # Ensure the result is a scalar using .item()
-    return (df["Close"].iloc[-1] / df["Close"].iloc[-days] - 1).item()
-
-
-# ----------------------------------
-# MÉTRICAS
-# ----------------------------------
-def compute_metrics(df, taxa_etf):
-    df["ret"] = df["Close"].pct_change()
-
-    df["mm50"] = df["Close"].rolling(MM_CURTA).mean()
-    df["mm200"] = df["Close"].rolling(MM_LONGA).mean()
-
-    # Rentabilidade
-    ret_1y_nom = calc_return(df, DAYS_1Y)
-    ret_5y_nom = calc_return(df, DAYS_5Y)
-
-    ret_1y_real = (1 + ret_1y_nom) / (1 + IPCA_12M) - 1
-    ret_5y_real = (1 + ret_5y_nom) / (1 + IPCA_5Y) - 1
-
-    ret_1y_liq = ret_1y_real - taxa_etf - TAXA_B3
-    ret_5y_liq = ret_5y_real - (taxa_etf + TAXA_B3) * 5
-
-    # Risco
-    vol_1y = df["ret"].tail(DAYS_1Y).std() * np.sqrt(252)
-
-    cum = (1 + df["ret"]).cumprod()
-    peak = cum.cummax()
-    drawdown = cum / peak - 1
-
-    return {
-        "price": round(df["Close"].iloc[-1].item(), 2),
-        "returns": {
-            "1y": {
-                "nominal": round(ret_1y_nom, 4),
-                "real": round(ret_1y_real, 4),
-                "liquido": round(ret_1y_liq, 4)
-            },
-            "5y": {
-                "nominal": round(ret_5y_nom, 4),
-                "real": round(ret_5y_real, 4),
-                "liquido": round(ret_5y_liq, 4)
-            }
-        },
-        "risk": {
-            "vol_1y": round(vol_1y, 4),
-            "drawdown_max": round(drawdown.min(), 4),
-            "drawdown_atual": round(drawdown.iloc[-1], 4),
-            "dist_mm200": round(
-                (df["Close"].iloc[-1] / df["mm200"].iloc[-1] - 1).item(),
-                4
-            )
-        }
-    }
-
-
-def generate_alerts(metrics):
-    alerts = []
-
-    if metrics["risk"]["dist_mm200"] < DIST_MM200_ALERT:
-        alerts.append("Preço abaixo da MM200")
-
-    if metrics["risk"]["drawdown_atual"] < DRAWDOWN_ALERT:
-        alerts.append("Drawdown elevado")
-
-    if metrics["returns"]["1y"]["real"] < 0:
-        alerts.append("Retorno real negativo (1a)")
-
-    return alerts
-
-
-# ----------------------------------
-# PIPELINE FINAL — 4 ETFs
-# ----------------------------------
-summary = {
-    "ipca": {
-        "ipca_12m": round(IPCA_12M, 4),
-        "ipca_5y_proxy": round(IPCA_5Y, 4)
-    },
-    "etfs": {}
+# =====================
+# Config
+# =====================
+ETFS = {
+    "BOVA11": "BOVA11.SA",
+    "IVVB11": "IVVB11.SA",
+    "GOLD11": "GOLD11.SA",
+    "BIXN39": "BIXN39.SA"
 }
 
-for ticker, cfg in ETFS.items():
-    print(f"Processando {cfg['name']} ({ticker})")
+DATA_DIR = Path("data")
+DATA_DIR.mkdir(exist_ok=True)
 
-    df = load_data(ticker)
-    metrics = compute_metrics(df, cfg["taxa_etf"])
-    alerts = generate_alerts(metrics)
+# =====================
+# IPCA 12m
+# =====================
+def get_ipca_12m():
+    df = sgs.get({"ipca": 433})
+    return df["ipca"].iloc[-1] / 100
 
-    result = {
-        "ticker": ticker,
-        "name": cfg["name"],
-        **metrics,
-        "alerts": alerts
-    }
+IPCA_12M = get_ipca_12m()
 
-    with open(f"data/{cfg['name']}.json", "w") as f:
-        json.dump(result, f, indent=2)
+# =====================
+# Helpers
+# =====================
+def annualized_return(prices):
+    return (prices.iloc[-1] / prices.iloc[0]) ** (252 / len(prices)) - 1
 
-    summary["etfs"][cfg["name"]] = result
+def max_drawdown(prices):
+    cummax = prices.cummax()
+    return (prices / cummax - 1).min()
 
-with open("data/summary.json", "w") as f:
-    json.dump(summary, f, indent=2)
+# =====================
+# Loop principal
+# =====================
+summary = []
+signals = []
+
+for etf, ticker in ETFS.items():
+    df = yf.download(ticker, period="6y", auto_adjust=True, progress=False)
+    df = df.dropna()
+
+    close = df["Close"]
+
+    # Médias
+    df["ma_1y"] = close.rolling(252).mean()
+
+    price = close.iloc[-1]
+    ma_1y = df["ma_1y"].iloc[-1]
+
+    # Retornos
+    ret_1a = price / close.iloc[-252] - 1
+    ret_5a = annualized_return(close.tail(252 * 5))
+    ret_real_1a = (1 + ret_1a) / (1 + IPCA_12M) - 1
+
+    # Risco
+    vol = close.pct_change().std() * np.sqrt(252)
+    dd = max_drawdown(close)
+
+    # Topo / fundo 1a
+    max_1a = close.tail(252).max()
+    min_1a = close.tail(252).min()
+
+    dist_ma = price / ma_1y - 1
+    dist_topo = price / max_1a - 1
+
+    # Sinal
+    if dist_ma < -0.10 and dist_topo < -0.20:
+        signal = "COMPRAR"
+    elif dist_ma > 0.20 or dist_topo > -0.05:
+        signal = "REDUZIR"
+    else:
+        signal = "NEUTRO"
+
+    # Histórico normalizado
+    hist = (close / close.iloc[0] * 100).reset_index()
+    hist.columns = ["date", "price_norm"]
+    hist["date"] = hist["date"].astype(str)
+    hist.to_json(DATA_DIR / f"{etf}_history.json", orient="records")
+
+    # Summary
+    summary.append({
+        "ETF": etf,
+        "Preço": round(price, 2),
+        "Retorno 1a (%)": round(ret_1a * 100, 2),
+        "Retorno real 1a (%)": round(ret_real_1a * 100, 2),
+        "Retorno 5a a.a. (%)": round(ret_5a * 100, 2),
+        "Volatilidade (%)": round(vol * 100, 2),
+        "Drawdown máx (%)": round(dd * 100, 2)
+    })
+
+    signals.append({
+        "ETF": etf,
+        "Preço": round(price, 2),
+        "Dist. MM 1a (%)": round(dist_ma * 100, 2),
+        "Dist. topo 1a (%)": round(dist_topo * 100, 2),
+        "Sinal": signal
+    })
+
+# =====================
+# Salva JSONs
+# =====================
+output = {
+    "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+    "ipca_12m": round(IPCA_12M * 100, 2),
+    "summary": summary,
+    "signals": signals
+}
+
+with open(DATA_DIR / "dashboard.json", "w") as f:
+    json.dump(output, f, indent=2, ensure_ascii=False)
