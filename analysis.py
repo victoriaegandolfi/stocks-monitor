@@ -49,4 +49,4 @@ for etf, ticker in ETFS.items():
         ticker,
         period="6y",
         auto_adjust=True,
-        progr
+        progr)
