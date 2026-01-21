@@ -41,7 +41,7 @@ jobs:
         run: |
           python analysis.py
       - name: Rodar análise dos ETFs
-        run: python analysis.py
+        run: python analysis_etfs.py
 
       - name: Rodar análise das Ações
         run: python analysis_stock.py
