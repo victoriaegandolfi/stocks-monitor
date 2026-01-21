@@ -44,7 +44,7 @@ jobs:
         run: python analysis.py
 
       - name: Rodar análise das Ações
-        run: python analysis_stocks.py
+        run: python analysis_stock.py
 
       # 6️⃣ Commit e push dos JSONs (se houver mudanças)
       - name: Commit e push dos JSONs
