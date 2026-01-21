@@ -4,7 +4,7 @@ import numpy as np
 import json
 import os
 from bcb import sgs
-from config import *
+#from config import *
 
 # ----------------------------------
 # PARÂMETROS DE TEMPO
@@ -46,7 +46,8 @@ def load_data(ticker):
 def calc_return(df, days):
     if len(df) < days:
         return np.nan
-    return df["Close"].iloc[-1] / df["Close"].iloc[-days] - 1
+    # Ensure the result is a scalar using .item()
+    return (df["Close"].iloc[-1] / df["Close"].iloc[-days] - 1).item()
 
 
 # ----------------------------------
@@ -76,7 +77,7 @@ def compute_metrics(df, taxa_etf):
     drawdown = cum / peak - 1
 
     return {
-        "price": round(df["Close"].iloc[-1], 2),
+        "price": round(df["Close"].iloc[-1].item(), 2),
         "returns": {
             "1y": {
                 "nominal": round(ret_1y_nom, 4),
@@ -94,7 +95,8 @@ def compute_metrics(df, taxa_etf):
             "drawdown_max": round(drawdown.min(), 4),
             "drawdown_atual": round(drawdown.iloc[-1], 4),
             "dist_mm200": round(
-                df["Close"].iloc[-1] / df["mm200"].iloc[-1] - 1, 4
+                (df["Close"].iloc[-1] / df["mm200"].iloc[-1] - 1).item(),
+                4
             )
         }
     }
