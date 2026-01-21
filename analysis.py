@@ -24,19 +24,21 @@ DATA_DIR.mkdir(exist_ok=True)
 # =====================
 def get_ipca_12m():
     df = sgs.get({"ipca": 433})
-    return df["ipca"].iloc[-1] / 100
+    return float(df["ipca"].iloc[-1]) / 100
 
 IPCA_12M = get_ipca_12m()
 
 # =====================
 # Funções auxiliares
 # =====================
-def annualized_return(prices):
+def annualized_return(prices: pd.Series) -> float:
+    prices = prices.dropna()
     return (prices.iloc[-1] / prices.iloc[0]) ** (252 / len(prices)) - 1
 
-def max_drawdown(prices):
+def max_drawdown(prices: pd.Series) -> float:
+    prices = prices.dropna()
     cummax = prices.cummax()
-    return (prices / cummax - 1).min()
+    return float((prices / cummax - 1).min())
 
 # =====================
 # Processamento
@@ -50,17 +52,32 @@ for etf, ticker in ETFS.items():
         period="6y",
         auto_adjust=True,
         progress=False
-    ).dropna()
+    )
 
-    close = df["Close"]
-    price = float(close.iloc[-1])
+    if df.empty or "Close" not in df:
+        continue
 
+    close = df["Close"].dropna()
+
+    if len(close) < 50:
+        continue
+
+    price = close.iloc[-1].item()
+
+    # =====================
     # Média móvel 1 ano
-    df["ma_1y"] = close.rolling(252).mean()
-    ma_1y = df["ma_1y"].iloc[-1]
+    # =====================
+    ma_1y = close.rolling(252).mean().iloc[-1]
+    ma_1y = ma_1y.item() if not np.isnan(ma_1y) else np.nan
 
+    # =====================
     # Retornos
-    ret_1a = price / close.iloc[-252] - 1 if len(close) >= 252 else np.nan
+    # =====================
+    ret_1a = (
+        (price / close.iloc[-252].item() - 1)
+        if len(close) >= 252 else np.nan
+    )
+
     ret_5a = (
         annualized_return(close.tail(252 * 5))
         if len(close) >= 252 * 5 else np.nan
@@ -71,23 +88,30 @@ for etf, ticker in ETFS.items():
         if not np.isnan(ret_1a) else np.nan
     )
 
+    # =====================
     # Risco
+    # =====================
     vol = close.pct_change().std() * np.sqrt(252)
     dd = max_drawdown(close)
 
+    # =====================
     # Topo 1 ano
-    max_1a = close.tail(252).max() if len(close) >= 252 else np.nan
+    # =====================
+    max_1a = (
+        close.tail(252).max().item()
+        if len(close) >= 252 else np.nan
+    )
 
     # =====================
-    # Sinal de preço (SEGURO)
+    # Sinal de preço
     # =====================
     dist_ma = np.nan
     dist_topo = np.nan
     signal = "NEUTRO"
 
     if not np.isnan(ma_1y) and not np.isnan(max_1a):
-        dist_ma = float(price / ma_1y - 1)
-        dist_topo = float(price / max_1a - 1)
+        dist_ma = price / ma_1y - 1
+        dist_topo = price / max_1a - 1
 
         if dist_ma < -0.10 and dist_topo < -0.20:
             signal = "COMPRAR"
