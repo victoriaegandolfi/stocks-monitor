@@ -165,7 +165,7 @@ output = {
     "data": results
 }
 
-with open(DATA_DIR / "dashboard.json", "w") as f:
+with open(DATA_DIR / "../data/dashboard.json", "w") as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
 
 print("✅ analysis_stocks.py finalizado com sucesso")
