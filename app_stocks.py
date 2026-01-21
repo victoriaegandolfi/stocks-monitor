@@ -46,6 +46,12 @@ selected_ticker = st.sidebar.selectbox(
     sorted(df["Ticker"].unique())
 )
 
+owner_selected = st.sidebar.selectbox(
+    "Carteira",
+    ["Todas", "vic", "namorado"]
+)
+
+
 # ===============================
 # FILTERS
 # ===============================
