@@ -194,5 +194,5 @@ output = {
     "signals": signals
 }
 
-with open(DATA_DIR / "dashboard.json", "w") as f:
+with open(DATA_DIR / "dashboard_etfs.json", "w") as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
