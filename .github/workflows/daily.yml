@@ -37,9 +37,7 @@ jobs:
           git pull origin main --rebase
 
       # 5️⃣ Executa o script de análise
-      - name: Rodar análise dos ETFs
-        run: |
-          python analysis.py
+
       - name: Rodar análise dos ETFs
         run: python analysis_etfs.py
 
