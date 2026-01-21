@@ -42,7 +42,7 @@ def color_signal(val):
     if val == "COMPRAR":
         return "background-color: #c6f6d5"
     if val == "REDUZIR":
-        return "background-color: #fed7d7"
+        return "background-color: #ff2c2c"
     return ""
 
 st.dataframe(
