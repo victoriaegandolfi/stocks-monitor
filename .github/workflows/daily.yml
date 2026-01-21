@@ -40,6 +40,11 @@ jobs:
       - name: Rodar análise dos ETFs
         run: |
           python analysis.py
+      - name: Rodar análise dos ETFs
+        run: python analysis.py
+
+      - name: Rodar análise das Ações
+        run: python analysis_stocks.py
 
       # 6️⃣ Commit e push dos JSONs (se houver mudanças)
       - name: Commit e push dos JSONs
