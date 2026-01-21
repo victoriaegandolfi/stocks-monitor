@@ -165,7 +165,11 @@ output = {
     "data": results
 }
 
-with open(DATA_DIR / "dashboard_stocks.json", "w") as f:
+ROOT_DIR = Path(__file__).parent.resolve()
+DATA_DIR = ROOT_DIR / "data" / "stocks"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+with open(DATA_DIR / "dashboard_stocks.json", "w", encoding="utf-8") as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
 
 
