@@ -16,6 +16,8 @@ jobs:
       # 1️⃣ Baixa o repositório
       - name: Checkout do repositório
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # 2️⃣ Configura Python
       - name: Configurar Python
