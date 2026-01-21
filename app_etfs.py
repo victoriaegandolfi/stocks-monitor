@@ -1,143 +1,86 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import yfinance as yf
 import json
+import matplotlib.pyplot as plt
 from pathlib import Path
-from datetime import datetime
-from bcb import sgs
 
-# =====================================================
-# PASTA DE DADOS
-# =====================================================
-ROOT_DIR = Path(__file__).parent.resolve()
-DATA_DIR = ROOT_DIR / "data" / "etfs"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
+st.set_page_config(page_title="Monitor de ETFs", layout="wide")
 
-# =====================================================
-# ETFS
-# =====================================================
-ETFS = {
-    "BOVA11": "BOVA11.SA",
-    "IVVB11": "IVVB11.SA",
-    "GOLD11": "GOLD11.SA",
-    "BIXN39": "BIXN39.SA"
-}
+DATA_DIR = Path("data")
 
-st.title("Dashboard de ETFs")
+with open(DATA_DIR / "dashboard.json") as f:
+    data = json.load(f)
 
-# =====================================================
-# Funções utilitárias
-# =====================================================
-def scalar(x):
-    if isinstance(x, pd.Series):
-        if x.empty:
-            return np.nan
-        return float(x.iloc[-1])
-    try:
-        return float(x)
-    except Exception:
-        return np.nan
+df_summary = pd.DataFrame(data["summary"])
+df_signals = pd.DataFrame(data["signals"])
 
-def get_ipca_12m():
-    df = sgs.get({"ipca": 433})
-    return scalar(df["ipca"]) / 100
+# =====================
+# Header
+# =====================
+st.title("📊 Monitor de ETFs")
+st.caption(
+    f"Última atualização: {data['updated_at']} | "
+    f"IPCA 12m: {data['ipca_12m']}%"
+)
 
-def annualized_return(prices: pd.Series):
-    prices = prices.dropna()
-    if len(prices) < 2:
-        return np.nan
-    return float((prices.iloc[-1] / prices.iloc[0]) ** (252 / len(prices)) - 1)
-
-def max_drawdown(prices: pd.Series):
-    prices = prices.dropna()
-    if prices.empty:
-        return np.nan
-    cummax = prices.cummax()
-    return float((prices / cummax - 1).min())
-
-def max_last_year(close: pd.Series):
-    if close.empty:
-        return np.nan
-    last_date = close.index[-1]
-    start_date = last_date - pd.DateOffset(years=1)
-    window = close[close.index >= start_date]
-    if window.empty:
-        return np.nan
-    return float(window.max())
-
-# =====================================================
-# ANALISE DOS ETFS
-# =====================================================
-IPCA_12M = get_ipca_12m()
-summary = []
-signals = []
-
-for etf, ticker in ETFS.items():
-    df = yf.download(ticker, period="6y", auto_adjust=True, progress=False)
-    if df.empty or "Close" not in df.columns:
-        continue
-    close = df["Close"].dropna()
-    if len(close) < 60:
-        continue
-
-    price = scalar(close.iloc[-1])
-    ma_1y = scalar(close.rolling(252).mean().iloc[-1])
-    ret_1a = scalar(price / scalar(close.iloc[-252]) - 1) if len(close) >= 252 else np.nan
-    ret_5a = scalar(annualized_return(close.tail(252 * 5))) if len(close) >= 252*5 else np.nan
-    ret_real_1a = scalar((1 + ret_1a) / (1 + IPCA_12M) - 1) if not pd.isna(ret_1a) else np.nan
-    vol = scalar(close.pct_change().std()) * np.sqrt(252)
-    dd = scalar(max_drawdown(close))
-    max_1a = max_last_year(close)
-
-    # sinal
-    dist_ma = dist_topo = np.nan
-    signal = "NEUTRO"
-    if not pd.isna(ma_1y) and not pd.isna(max_1a):
-        dist_ma = scalar(price / ma_1y - 1)
-        dist_topo = scalar(price / max_1a - 1)
-        if dist_ma < -0.10 and dist_topo < -0.20:
-            signal = "COMPRAR"
-        elif dist_ma > 0.20 or dist_topo > -0.05:
-            signal = "REDUZIR"
-
-    # histórico
-    hist = (close / close.iloc[0] * 100).reset_index()
-    hist.columns = ["date", "price_norm"]
-    hist["date"] = hist["date"].astype(str)
-    hist.to_json(DATA_DIR / f"{etf}_history.json", orient="records")
-
-    summary.append({
-        "ETF": etf,
-        "Preço": round(price,2),
-        "Retorno 1a (%)": None if pd.isna(ret_1a) else round(ret_1a*100,2),
-        "Retorno real 1a (%)": None if pd.isna(ret_real_1a) else round(ret_real_1a*100,2),
-        "Retorno 5a a.a. (%)": None if pd.isna(ret_5a) else round(ret_5a*100,2),
-        "Volatilidade (%)": None if pd.isna(vol) else round(vol*100,2),
-        "Drawdown máx (%)": None if pd.isna(dd) else round(dd*100,2)
-    })
-
-    signals.append({
-        "ETF": etf,
-        "Preço": round(price,2),
-        "Dist. MM 1a (%)": None if pd.isna(dist_ma) else round(dist_ma*100,2),
-        "Dist. topo 1a (%)": None if pd.isna(dist_topo) else round(dist_topo*100,2),
-        "Sinal": signal
-    })
-
-# salva JSON
-output = {
-    "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
-    "ipca_12m": round(IPCA_12M*100,2),
-    "summary": summary,
-    "signals": signals
-}
-
-with open(DATA_DIR / "dashboard_etfs.json", "w", encoding="utf-8") as f:
-    json.dump(output, f, indent=2, ensure_ascii=False)
-
-st.write(f"Última atualização: {output['updated_at']}")
+# =====================
+# Tabela 1 — Resumo
+# =====================
 st.subheader("Resumo dos ETFs")
-st.dataframe(pd.DataFrame(summary))
-st.subheader("Sinais de preço")
-st.dataframe(pd.DataFrame(signals))
+st.dataframe(df_summary, use_container_width=True)
+
+# =====================
+# Tabela 2 — Sinais
+# =====================
+st.subheader("Sinais de preço (MM 1 ano)")
+
+def color_signal(val):
+    if val == "COMPRAR":
+        return "background-color: #c6f6d5"
+    if val == "REDUZIR":
+        return "background-color: #fed7d7"
+    return ""
+
+st.dataframe(
+    df_signals.style.applymap(color_signal, subset=["Sinal"]),
+    use_container_width=True
+)
+
+# =====================
+# Gráfico comparativo
+# =====================
+st.subheader("Comparação de preço (base 100)")
+
+selected = st.multiselect(
+    "Selecione os ETFs",
+    options=df_summary["ETF"].tolist(),
+    default=df_summary["ETF"].tolist()
+)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+for etf in selected:
+    hist = pd.read_json(DATA_DIR / f"{etf}_history.json")
+    ax.plot(hist["date"], hist["price_norm"], label=etf)
+
+ax.set_ylabel("Índice (base 100)")
+ax.legend()
+ax.grid(True)
+
+st.pyplot(fig)
+
+# =====================
+# Ajuda
+# =====================
+with st.expander("ℹ️ Como interpretar os sinais"):
+    st.markdown("""
+**🟢 COMPRAR**  
+Preço bem abaixo da média móvel de 1 ano e distante do topo recente.
+
+**🔴 REDUZIR**  
+Preço muito acima da média ou próximo do topo do último ano.
+
+**🟡 NEUTRO**  
+Sem desvios relevantes.
+""")
+
