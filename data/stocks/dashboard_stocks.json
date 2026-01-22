@@ -1,0 +1,403 @@
+{
+  "updated_at": "2026-01-22T00:34:33.208000",
+  "data": [
+    {
+      "Ticker": "AAPL",
+      "Preço Atual": 247.65,
+      "Preço Justo (Graham)": 28.92,
+      "Desvio (%)": 756.2,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Fundamentalista"
+      ],
+      "Dividendos Meses": [
+        2,
+        5,
+        8,
+        11
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "ABEV3.SA",
+      "Preço Atual": 14.31,
+      "Preço Justo (Graham)": 11.64,
+      "Desvio (%)": 22.96,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Fundamentalista"
+      ],
+      "Dividendos Meses": [
+        1,
+        3,
+        5,
+        12
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "BBAS3.SA",
+      "Preço Atual": 22.4,
+      "Preço Justo (Graham)": 40.01,
+      "Desvio (%)": -44.01,
+      "Sinal": "Comprar",
+      "Estratégias": [
+        "Fundamentalista",
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        2,
+        3,
+        5,
+        6,
+        8,
+        9,
+        11,
+        12
+      ],
+      "Quantidade": 20.0,
+      "Preço Médio": 21.0,
+      "Valor Investido": 420.0,
+      "Valor Atual": 448.0,
+      "Exposicao": [
+        {
+          "owner": "vic",
+          "quantidade": 20.0,
+          "preco_medio": 21.0,
+          "valor_investido": 420.0,
+          "valor_atual": 448.0
+        },
+        {
+          "owner": "namorado",
+          "quantidade": 20.0,
+          "preco_medio": 21.0,
+          "valor_investido": 420.0,
+          "valor_atual": 448.0
+        }
+      ]
+    },
+    {
+      "Ticker": "BRK-B",
+      "Preço Atual": 483.83,
+      "Preço Justo (Graham)": 18474.79,
+      "Desvio (%)": -97.38,
+      "Sinal": "Comprar",
+      "Estratégias": [
+        "Fundamentalista"
+      ],
+      "Dividendos Meses": [],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "EUAQ11.SA",
+      "Preço Atual": null,
+      "Preço Justo (Graham)": null,
+      "Desvio (%)": null,
+      "Sinal": "Sem dados",
+      "Estratégias": [
+        "Fundamentalista",
+        "Dividendos"
+      ],
+      "Dividendos Meses": [],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "ITSA4.SA",
+      "Preço Atual": 12.72,
+      "Preço Justo (Graham)": 16.0,
+      "Desvio (%)": -20.49,
+      "Sinal": "Comprar",
+      "Estratégias": [
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "ITUB4.SA",
+      "Preço Atual": 41.67,
+      "Preço Justo (Graham)": 41.67,
+      "Desvio (%)": 0.01,
+      "Sinal": "Manter",
+      "Estratégias": [
+        "Fundamentalista"
+      ],
+      "Dividendos Meses": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "JNJ",
+      "Preço Atual": 218.01,
+      "Preço Justo (Graham)": 87.55,
+      "Desvio (%)": 149.01,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Fundamentalista",
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        2,
+        5,
+        8,
+        11
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "KO",
+      "Preço Atual": 72.01,
+      "Preço Justo (Graham)": 22.22,
+      "Desvio (%)": 224.15,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        3,
+        6,
+        9,
+        11,
+        12
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "MSFT",
+      "Preço Atual": 444.11,
+      "Preço Justo (Graham)": 124.21,
+      "Desvio (%)": 257.54,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Fundamentalista"
+      ],
+      "Dividendos Meses": [
+        2,
+        5,
+        8,
+        11
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "PETR4.SA",
+      "Preço Atual": 33.43,
+      "Preço Justo (Graham)": 65.38,
+      "Desvio (%)": -48.87,
+      "Sinal": "Comprar",
+      "Estratégias": [
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        4,
+        5,
+        6,
+        8,
+        11,
+        12
+      ],
+      "Quantidade": 13.0,
+      "Preço Médio": 33.43,
+      "Valor Investido": 434.59,
+      "Valor Atual": 434.59,
+      "Exposicao": [
+        {
+          "owner": "vic",
+          "quantidade": 13.0,
+          "preco_medio": 33.43,
+          "valor_investido": 434.59,
+          "valor_atual": 434.59
+        }
+      ]
+    },
+    {
+      "Ticker": "PG",
+      "Preço Atual": 146.06,
+      "Preço Justo (Graham)": 58.84,
+      "Desvio (%)": 148.21,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        1,
+        4,
+        7,
+        10
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "TAEE11.SA",
+      "Preço Atual": 40.71,
+      "Preço Justo (Graham)": 22.57,
+      "Desvio (%)": 80.39,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        1,
+        4,
+        5,
+        8,
+        11,
+        12
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "TRPL4.SA",
+      "Preço Atual": null,
+      "Preço Justo (Graham)": null,
+      "Desvio (%)": null,
+      "Sinal": "Sem dados",
+      "Estratégias": [
+        "Dividendos"
+      ],
+      "Dividendos Meses": [],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "VALE3.SA",
+      "Preço Atual": 82.5,
+      "Preço Justo (Graham)": 89.26,
+      "Desvio (%)": -7.57,
+      "Sinal": "Manter",
+      "Estratégias": [
+        "Fundamentalista"
+      ],
+      "Dividendos Meses": [
+        3,
+        6,
+        8,
+        9,
+        11,
+        12
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "VZ",
+      "Preço Atual": 39.24,
+      "Preço Justo (Graham)": 51.27,
+      "Desvio (%)": -23.47,
+      "Sinal": "Comprar",
+      "Estratégias": [
+        "Dividendos"
+      ],
+      "Dividendos Meses": [
+        1,
+        4,
+        7,
+        10
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    },
+    {
+      "Ticker": "WEGE3.SA",
+      "Preço Atual": 47.59,
+      "Preço Justo (Graham)": 13.65,
+      "Desvio (%)": 248.7,
+      "Sinal": "Reduzir",
+      "Estratégias": [
+        "Fundamentalista"
+      ],
+      "Dividendos Meses": [
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        12
+      ],
+      "Quantidade": NaN,
+      "Preço Médio": NaN,
+      "Valor Investido": null,
+      "Valor Atual": null,
+      "Exposicao": []
+    }
+  ]
+}
