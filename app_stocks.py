@@ -8,19 +8,22 @@ import numpy as np
 # CONFIG
 # ===============================
 
-st.set_page_config(
-    page_title="Dashboard de Ações",
-    layout="wide"
-)
+st.set_page_config(page_title="Monitor de Stocks", layout="wide")
 
+# Caminho absoluto baseado no arquivo atual
 ROOT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = ROOT_DIR / "data" / "stocks"
 
-with open(DATA_DIR / "dashboard_stocks.json", "r", encoding="utf-8") as f:
+dashboard_file = DATA_DIR / "dashboard_stocks.json"
+
+if not dashboard_file.exists():
+    st.error(f"Arquivo não encontrado: {dashboard_file}")
+    st.stop()
+
+with open(dashboard_file, "r", encoding="utf-8") as f:
     data = json.load(f)
 
-
-df = pd.DataFrame(raw["data"])
+df = pd.DataFrame(data["data"])
 
 # ===============================
 # SIDEBAR
