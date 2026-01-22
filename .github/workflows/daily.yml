@@ -1,4 +1,4 @@
-name: Atualizar dados dos ETFs diariamente
+name: Atualizar dados diariamente (ETFs e Stocks)
 
 on:
   schedule:
@@ -9,11 +9,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-etf-data:
+  update-data:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout com histórico completo (ESSENCIAL)
+      # 1️⃣ Checkout do repositório com histórico completo
       - name: Checkout do repositório
         uses: actions/checkout@v4
         with:
@@ -36,26 +36,25 @@ jobs:
         run: |
           git pull origin main --rebase
 
-      # 5️⃣ Executa o script de análise
-
+      # 5️⃣ Executa os scripts de análise
       - name: Rodar análise dos ETFs
         run: python analysis_etfs.py
 
       - name: Rodar análise das Ações
         run: python analysis_stock.py
 
-      # 6️⃣ Commit e push dos JSONs (se houver mudanças)
+      # 6️⃣ Commit e push de todas as mudanças nos dados
       - name: Commit e push dos JSONs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add data/etfs/*.json
-          git add data/stocks/*.json
+          # Adiciona todas as mudanças e exclusões
+          git add -A
 
           if git diff --cached --quiet; then
             echo "Nenhuma mudança nos dados"
           else
-            git commit -m "Atualiza dados dos ETFs (automático)"
+            git commit -m "Atualiza dados dos ETFs e Stocks (automático)"
             git push origin main
           fi
