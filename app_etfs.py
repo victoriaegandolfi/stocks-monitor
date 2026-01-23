@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import json
-from pathlib import Path
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 # ===============================
 # CONFIG
@@ -19,7 +19,7 @@ DASH_FILE = DATA_DIR / "dashboard_etfs.json"
 # ===============================
 
 if not DASH_FILE.exists():
-    st.error("Arquivo dashboard_etfs.json não encontrado.")
+    st.error("dashboard_etfs.json não encontrado")
     st.stop()
 
 with open(DASH_FILE, "r", encoding="utf-8") as f:
@@ -36,7 +36,31 @@ df = pd.DataFrame(raw["data"])
 # ===============================
 
 st.title("📊 Monitor de ETFs")
-st.caption(f"Última atualização: {raw['updated_at']}")
+st.caption(f"Atualizado em: {raw.get('updated_at', '—')}")
+
+# ===============================
+# SIDEBAR
+# ===============================
+
+st.sidebar.header("🔎 Filtros")
+
+signal_filter = st.sidebar.multiselect(
+    "Sinal",
+    options=sorted(df["Sinal"].unique()),
+    default=list(df["Sinal"].unique())
+)
+
+selected_etfs = st.sidebar.multiselect(
+    "ETFs (gráfico)",
+    options=sorted(df["ETF"].unique()),
+    default=sorted(df["ETF"].unique())
+)
+
+# ===============================
+# FILTERS
+# ===============================
+
+filtered = df[df["Sinal"].isin(signal_filter)]
 
 # ===============================
 # TABELA PRINCIPAL
@@ -45,46 +69,53 @@ st.caption(f"Última atualização: {raw['updated_at']}")
 st.subheader("📌 Visão Geral")
 
 display_cols = [
-    "Ticker",
+    "ETF",
     "Preço Atual",
-    "Média 200d",
-    "Distância MM (%)",
-    "Distância Topo (%)",
-    "CAGR 5y (%)",
-    "Volatilidade (%)",
+    "MM 1 ano",
+    "Topo 1 ano",
+    "Dist MM (%)",
+    "Dist Topo (%)",
     "Sinal"
 ]
 
 st.dataframe(
-    df[display_cols]
-    .sort_values("Distância MM (%)", ascending=True)
+    filtered[display_cols]
+    .sort_values("Dist MM (%)")
     .reset_index(drop=True),
     use_container_width=True
 )
 
 # ===============================
-# FILTROS
+# GRÁFICO DE PREÇO (BASE 100)
 # ===============================
 
-st.subheader("🎯 Análise individual")
+st.subheader("📈 Preço ao longo do tempo (Base 100)")
 
-selected = st.selectbox(
-    "Selecione o ETF",
-    sorted(df["Ticker"].unique())
-)
+if not selected_etfs:
+    st.info("Selecione ao menos um ETF para o gráfico.")
+else:
+    fig, ax = plt.subplots(figsize=(11, 5))
 
-row = df[df["Ticker"] == selected].iloc[0]
+    for etf in selected_etfs:
+        hist_file = DATA_DIR / f"{etf}_history.json"
 
-# ===============================
-# MÉTRICAS
-# ===============================
+        if not hist_file.exists():
+            continue
 
-col1, col2, col3, col4 = st.columns(4)
+        hist = pd.read_json(hist_file)
 
-col1.metric("Preço Atual", f"${row['Preço Atual']}")
-col2.metric("Média 200d", "-" if pd.isna(row["Média 200d"]) else f"${row['Média 200d']}")
-col3.metric("Distância MM", "-" if pd.isna(row["Distância MM (%)"]) else f"{row['Distância MM (%)']}%")
-col4.metric("Sinal", row["Sinal"])
+        if {"date", "price_norm"}.issubset(hist.columns):
+            ax.plot(
+                pd.to_datetime(hist["date"]),
+                hist["price_norm"],
+                label=etf
+            )
+
+    ax.set_ylabel("Índice (Base 100)")
+    ax.legend()
+    ax.grid(True)
+
+    st.pyplot(fig)
 
 # ===============================
 # AJUDA
@@ -93,17 +124,11 @@ col4.metric("Sinal", row["Sinal"])
 with st.expander("ℹ️ Como interpretar os sinais"):
     st.markdown("""
 **🟢 COMPRAR**  
-Preço bem abaixo da média de 1 ano e distante do topo recente.
+Preço bem abaixo da média móvel de 1 ano e distante do topo recente.
 
-**🟡 MANTER**  
-Preço próximo da média ou sem distorções relevantes.
+**🟡 NEUTRO**  
+Sem desvios relevantes em relação ao histórico.
 
 **🔴 REDUZIR**  
-Preço muito acima da média ou próximo do topo.
+Preço muito acima da média ou próximo do topo do último ano.
 """)
-
-# ===============================
-# FOOTER
-# ===============================
-
-st.caption("Modelo quantitativo • ETFs globais e Brasil • Projeto pessoal de investimentos")
