@@ -17,13 +17,66 @@ ETFS = {
 }
 
 
-
 DATA_DIR = Path("data/etfs")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # =====================================================
 # Funções utilitárias (ESCALARES APENAS)
-# =====================================================
+# =====================================================st.subheader("📊 Comparativo de ETFs")
+
+with open(DATA_DIR / "etf_metadata.json") as f:
+    meta = json.load(f)
+
+rows = []
+
+# carregar IVV como benchmark
+ivv_hist = pd.read_json(DATA_DIR / "IVV_history.json")
+ivv_ret = ivv_hist["price_norm"].pct_change().dropna()
+
+for etf, info in meta.items():
+    hist = pd.read_json(DATA_DIR / f"{etf}_history.json")
+    returns = hist["price_norm"].pct_change().dropna()
+
+    retorno_12m = (hist["price_norm"].iloc[-1] /
+                   hist["price_norm"].iloc[-252] - 1) * 100
+
+    volatilidade = returns.std() * np.sqrt(252) * 100
+
+    drawdown = (
+        hist["price_norm"] /
+        hist["price_norm"].cummax() - 1
+    ).min() * 100
+
+    corr_ivv = returns.corr(ivv_ret)
+
+    rows.append({st.subheader("📊 Comparativo de ETFs")
+
+with open(DATA_DIR / "etf_metadata.json") as f:
+    meta = json.load(f)
+
+rows = []
+
+# carregar IVV como benchmark
+ivv_hist = pd.read_json(DATA_DIR / "IVV_history.json")
+ivv_ret = ivv_hist["price_norm"].pct_change().dropna()
+
+for etf, info in meta.items():
+    hist = pd.read_json(DATA_DIR / f"{etf}_history.json")
+    returns = hist["price_norm"].pct_change().dropna()
+
+    retorno_12m = (hist["price_norm"].iloc[-1] /
+                   hist["price_norm"].iloc[-252] - 1) * 100
+
+    volatilidade = returns.std() * np.sqrt(252) * 100
+
+    drawdown = (
+        hist["price_norm"] /
+        hist["price_norm"].cummax() - 1
+    ).min() * 100
+
+    corr_ivv = returns.corr(ivv_ret)
+
+    rows.append({
 def scalar(x):
     """Converte qualquer input para float escalar ou np.nan"""
     if isinstance(x, pd.Series):
@@ -208,3 +261,50 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 with open(DATA_DIR / "dashboard_etfs.json", "w", encoding="utf-8") as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
 
+
+
+# =====================
+# Tabela Comparativa
+# =====================
+
+st.subheader("📊 Comparativo de ETFs")
+
+with open(DATA_DIR / "etf_metadata.json") as f:
+    meta = json.load(f)
+
+rows = []
+
+# carregar IVV como benchmark
+ivv_hist = pd.read_json(DATA_DIR / "IVV_history.json")
+ivv_ret = ivv_hist["price_norm"].pct_change().dropna()
+
+for etf, info in meta.items():
+    hist = pd.read_json(DATA_DIR / f"{etf}_history.json")
+    returns = hist["price_norm"].pct_change().dropna()
+
+    retorno_12m = (hist["price_norm"].iloc[-1] /
+                   hist["price_norm"].iloc[-252] - 1) * 100
+
+    volatilidade = returns.std() * np.sqrt(252) * 100
+
+    drawdown = (
+        hist["price_norm"] /
+        hist["price_norm"].cummax() - 1
+    ).min() * 100
+
+    corr_ivv = returns.corr(ivv_ret)
+
+    rows.append({
+        "ETF": etf,
+        "Tipo": info["tipo"],
+        "Retorno 12m (%)": round(retorno_12m, 2),
+        "Volatilidade (%)": round(volatilidade, 2),
+        "Máx Drawdown (%)": round(drawdown, 2),
+        "Correlação vs IVV": round(corr_ivv, 2)
+    })
+
+df_compare = pd.DataFrame(rows).sort_values(
+    "Retorno 12m (%)", ascending=False
+)
+
+st.dataframe(df_compare, use_container_width=True)
