@@ -1,0 +1,31 @@
+{
+  "IVV": {
+    "name": "iShares Core S&P 500 ETF",
+    "tipo": "Broad Market",
+    "benchmark": true
+  },
+  "VUG": {
+    "name": "Vanguard Growth ETF",
+    "tipo": "Growth"
+  },
+  "QQQ": {
+    "name": "Invesco QQQ Trust",
+    "tipo": "Growth / Tech"
+  },
+  "SCHD": {
+    "name": "Schwab U.S. Dividend ETF",
+    "tipo": "Dividendos"
+  },
+  "XLK": {
+    "name": "Technology Select Sector SPDR",
+    "tipo": "Setorial - Tech"
+  },
+  "IYW": {
+    "name": "iShares U.S. Technology ETF",
+    "tipo": "Setorial - Tech"
+  },
+  "MAGS": {
+    "name": "Roundhill Magnificent Seven ETF",
+    "tipo": "Mega Caps Growth"
+  }
+}
