@@ -31,6 +31,11 @@ if "data" not in raw or len(raw["data"]) == 0:
 
 df = pd.DataFrame(raw["data"])
 
+# coluna correta
+if "Ticker" not in df.columns:
+    st.error("Coluna 'Ticker' não encontrada no dashboard_etfs.json")
+    st.stop()
+
 # ===============================
 # HEADER
 # ===============================
@@ -46,14 +51,14 @@ st.sidebar.header("🔎 Filtros")
 
 signal_filter = st.sidebar.multiselect(
     "Sinal",
-    options=sorted(df["Sinal"].unique()),
-    default=list(df["Sinal"].unique())
+    options=sorted(df["Sinal"].dropna().unique()),
+    default=list(df["Sinal"].dropna().unique())
 )
 
 selected_etfs = st.sidebar.multiselect(
     "ETFs (gráfico)",
-    options=sorted(df["ETF"].unique()),
-    default=sorted(df["ETF"].unique())
+    options=sorted(df["Ticker"].unique()),
+    default=sorted(df["Ticker"].unique())
 )
 
 # ===============================
@@ -69,7 +74,7 @@ filtered = df[df["Sinal"].isin(signal_filter)]
 st.subheader("📌 Visão Geral")
 
 display_cols = [
-    "ETF",
+    "Ticker",
     "Preço Atual",
     "MM 1 ano",
     "Topo 1 ano",
@@ -78,9 +83,11 @@ display_cols = [
     "Sinal"
 ]
 
+existing_cols = [c for c in display_cols if c in filtered.columns]
+
 st.dataframe(
-    filtered[display_cols]
-    .sort_values("Dist MM (%)")
+    filtered[existing_cols]
+    .sort_values("Dist MM (%)", ascending=True)
     .reset_index(drop=True),
     use_container_width=True
 )
@@ -96,8 +103,10 @@ if not selected_etfs:
 else:
     fig, ax = plt.subplots(figsize=(11, 5))
 
-    for etf in selected_etfs:
-        hist_file = DATA_DIR / f"{etf}_history.json"
+    plotted = False
+
+    for ticker in selected_etfs:
+        hist_file = DATA_DIR / f"{ticker}_history.json"
 
         if not hist_file.exists():
             continue
@@ -108,14 +117,17 @@ else:
             ax.plot(
                 pd.to_datetime(hist["date"]),
                 hist["price_norm"],
-                label=etf
+                label=ticker
             )
+            plotted = True
 
-    ax.set_ylabel("Índice (Base 100)")
-    ax.legend()
-    ax.grid(True)
-
-    st.pyplot(fig)
+    if plotted:
+        ax.set_ylabel("Índice (Base 100)")
+        ax.legend()
+        ax.grid(True)
+        st.pyplot(fig)
+    else:
+        st.warning("Nenhum histórico encontrado para os ETFs selecionados.")
 
 # ===============================
 # AJUDA
@@ -132,3 +144,4 @@ Sem desvios relevantes em relação ao histórico.
 **🔴 REDUZIR**  
 Preço muito acima da média ou próximo do topo do último ano.
 """)
+
