@@ -1,133 +1,113 @@
 import yfinance as yf
 import pandas as pd
+import numpy as np
 import json
 from pathlib import Path
 from datetime import datetime
-import numpy as np
+from bcb import sgs
 
-# ===============================
-# CONFIG
-# ===============================
+# =====================================================
+# CONFIGURAÇÕES
+# =====================================================
 
-ETFS = [
-    "IVV", "VUG", "QQQ", "SCHD",
-    "XLK", "IYW", "MAGS"
-]
+ETFS = {
+    # Brasil
+    "BOVA11": "BOVA11.SA",
+    "IVVB11": "IVVB11.SA",
+    "GOLD11": "GOLD11.SA",
+    "BIXN39": "BIXN39.SA",
 
-DATA_DIR = Path("data/etfs")
+    # EUA
+    "VUG": "VUG",
+    "SCHD": "SCHD",
+    "IVV": "IVV",
+    "QQQ": "QQQ",
+    "XLK": "XLK",
+    "IYW": "IYW",
+    "MAGS": "MAGS"
+}
+
+ROOT_DIR = Path(__file__).parent.resolve()
+DATA_DIR = ROOT_DIR / "data" / "etfs"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-LOOKBACK_DAYS = 500
-MM_WINDOW = 252
+# =====================================================
+# FUNÇÕES AUXILIARES
+# =====================================================
 
-# ===============================
-# FUNÇÕES
-# ===============================
+def scalar(x):
+    if isinstance(x, pd.Series):
+        if x.empty:
+            return np.nan
+        return float(x.iloc[-1])
+    try:
+        return float(x)
+    except Exception:
+        return np.nan
+
+
+def get_ipca_12m():
+    df = sgs.get({"ipca": 433})
+    return scalar(df["ipca"]) / 100
+
+
+def annualized_return(prices: pd.Series):
+    prices = prices.dropna()
+    if len(prices) < 2:
+        return np.nan
+    return float((prices.iloc[-1] / prices.iloc[0]) ** (252 / len(prices)) - 1)
+
+
+def max_drawdown(prices: pd.Series):
+    prices = prices.dropna()
+    if prices.empty:
+        return np.nan
+    cummax = prices.cummax()
+    return float((prices / cummax - 1).min())
+
 
 def get_signal(price, mm, dist_topo):
-    if price < mm * 0.9 and dist_topo < -20:
+    if price < mm * 0.90 and dist_topo < -20:
         return "COMPRAR"
-    if price > mm * 1.1 or dist_topo > -5:
+    elif price > mm * 1.20 or dist_topo > -5:
         return "REDUZIR"
-    return "NEUTRO"
+    else:
+        return "NEUTRO"
 
-# ===============================
-# PROCESSAMENTO
-# ===============================
 
-summary_rows = []
-signal_rows = []
+# =====================================================
+# IPCA
+# =====================================================
 
-for etf in ETFS:
+IPCA_12M = get_ipca_12m()
+
+# =====================================================
+# PROCESSAMENTO PRINCIPAL
+# =====================================================
+
+summary = []
+signals = []
+
+for etf, ticker in ETFS.items():
     print(f"Processando {etf}")
 
     df = yf.download(
-        etf,
-        period=f"{LOOKBACK_DAYS}d",
+        ticker,
+        period="6y",
+        auto_adjust=True,
         progress=False
     )
 
-    if df.empty:
-        print(f"⚠️ Sem dados para {etf}")
+    if df.empty or "Close" not in df.columns:
         continue
 
-    df = df.reset_index()
-    df["Close"] = df["Close"].astype(float)
+    close = df["Close"].dropna()
+    if len(close) < 60:
+        continue
 
-    # Média móvel 1 ano
-    df["MM_1Y"] = df["Close"].rolling(MM_WINDOW).mean()
+    # ---------------------
+    # Preço atual
+    # ---------------------
+    price = float(close.iloc[-1])
 
-    # Topo 12 meses
-    df["Topo_12m"] = df["Close"].rolling(MM_WINDOW).max()
-
-    if np.isnan(mm) or np.isnan(topo):
-        signal = "NEUTRO"
-        dist_mm = np.nan
-        dist_topo = np.nan
-    else:
-        dist_mm = (price / mm - 1) * 100
-        dist_topo = (price / topo - 1) * 100
-        signal = get_signal(price, mm, dist_topo)
-
-
-    dist_mm = (price / mm - 1) * 100
-    dist_topo = (price / topo - 1) * 100
-
-    signal = get_signal(price, mm, dist_topo)
-
-    # ===============================
-    # SUMMARY
-    # ===============================
-
-    retorno_12m = (
-        df["Close"].iloc[-1] /
-        df["Close"].iloc[-MM_WINDOW] - 1
-    ) * 100
-
-    summary_rows.append({
-        "ETF": etf,
-        "Preço Atual": round(price, 2),
-        "Média 1 Ano": round(mm, 2),
-        "Desvio MM (%)": round(dist_mm, 2),
-        "Retorno 12m (%)": round(retorno_12m, 2)
-    })
-
-    signal_rows.append({
-        "ETF": etf,
-        "Sinal": signal,
-        "Distância do topo (%)": round(dist_topo, 2)
-    })
-
-    # ===============================
-    # HISTÓRICO NORMALIZADO
-    # ===============================
-
-    hist = df[["Date", "Close"]].copy()
-    hist["price_norm"] = hist["Close"] / hist["Close"].iloc[0] * 100
-
-    hist.rename(
-        columns={"Date": "date"},
-        inplace=True
-    )
-
-    hist[["date", "price_norm"]].to_json(
-        DATA_DIR / f"{etf}_history.json",
-        orient="records",
-        date_format="iso"
-    )
-
-# ===============================
-# DASHBOARD JSON
-# ===============================
-
-dashboard = {
-    "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
-    "ipca_12m": None,  # opcional depois
-    "summary": summary_rows,
-    "signals": signal_rows
-}
-
-with open(DATA_DIR / "dashboard_etfs.json", "w", encoding="utf-8") as f:
-    json.dump(dashboard, f, indent=2, ensure_ascii=False)
-
-print("✅ dashboard_etfs.json gerado com sucesso")
+    # ---------------------
