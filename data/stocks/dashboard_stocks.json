@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-01T13:36:11.803031",
+  "updated_at": "2026-02-02T13:54:24.168021",
   "data": [
     {
       "Ticker": "AAPL",
@@ -24,9 +24,9 @@
     },
     {
       "Ticker": "ABEV3.SA",
-      "Preço Atual": 14.85,
+      "Preço Atual": 14.93,
       "Preço Justo (Graham)": 11.92,
-      "Desvio (%)": 24.58,
+      "Desvio (%)": 25.25,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -45,9 +45,9 @@
     },
     {
       "Ticker": "BBAS3.SA",
-      "Preço Atual": 25.22,
+      "Preço Atual": 25.4,
       "Preço Justo (Graham)": 40.01,
-      "Desvio (%)": -36.96,
+      "Desvio (%)": -36.51,
       "Sinal": "Comprar",
       "Estratégias": [
         "Fundamentalista",
@@ -66,21 +66,21 @@
       "Quantidade": 20.0,
       "Preço Médio": 21.0,
       "Valor Investido": 420.0,
-      "Valor Atual": 504.4,
+      "Valor Atual": 508.0,
       "Exposicao": [
         {
           "owner": "vic",
           "quantidade": 20.0,
           "preco_medio": 21.0,
           "valor_investido": 420.0,
-          "valor_atual": 504.4
+          "valor_atual": 508.0
         },
         {
           "owner": "namorado",
           "quantidade": 20.0,
           "preco_medio": 21.0,
           "valor_investido": 420.0,
-          "valor_atual": 504.4
+          "valor_atual": 508.0
         }
       ]
     },
@@ -119,9 +119,9 @@
     },
     {
       "Ticker": "ITSA4.SA",
-      "Preço Atual": 13.66,
+      "Preço Atual": 13.86,
       "Preço Justo (Graham)": 16.0,
-      "Desvio (%)": -14.62,
+      "Desvio (%)": -13.37,
       "Sinal": "Manter",
       "Estratégias": [
         "Dividendos"
@@ -148,10 +148,10 @@
     },
     {
       "Ticker": "ITUB4.SA",
-      "Preço Atual": 45.5,
+      "Preço Atual": null,
       "Preço Justo (Graham)": 41.67,
-      "Desvio (%)": 9.2,
-      "Sinal": "Manter",
+      "Desvio (%)": null,
+      "Sinal": "Sem dados",
       "Estratégias": [
         "Fundamentalista"
       ],
@@ -200,8 +200,8 @@
     {
       "Ticker": "KO",
       "Preço Atual": 74.81,
-      "Preço Justo (Graham)": 22.4,
-      "Desvio (%)": 234.0,
+      "Preço Justo (Graham)": 22.22,
+      "Desvio (%)": 236.75,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -242,9 +242,9 @@
     },
     {
       "Ticker": "PETR4.SA",
-      "Preço Atual": 37.76,
+      "Preço Atual": 37.91,
       "Preço Justo (Graham)": 64.36,
-      "Desvio (%)": -41.33,
+      "Desvio (%)": -41.1,
       "Sinal": "Comprar",
       "Estratégias": [
         "Dividendos"
@@ -260,22 +260,22 @@
       "Quantidade": 13.0,
       "Preço Médio": 33.43,
       "Valor Investido": 434.59,
-      "Valor Atual": 490.88,
+      "Valor Atual": 492.83,
       "Exposicao": [
         {
           "owner": "vic",
           "quantidade": 13.0,
           "preco_medio": 33.43,
           "valor_investido": 434.59,
-          "valor_atual": 490.88
+          "valor_atual": 492.83
         }
       ]
     },
     {
       "Ticker": "PG",
       "Preço Atual": 151.77,
-      "Preço Justo (Graham)": 58.79,
-      "Desvio (%)": 158.14,
+      "Preço Justo (Graham)": 58.45,
+      "Desvio (%)": 159.67,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -294,9 +294,9 @@
     },
     {
       "Ticker": "TAEE11.SA",
-      "Preço Atual": 41.63,
+      "Preço Atual": 42.02,
       "Preço Justo (Graham)": 23.22,
-      "Desvio (%)": 79.26,
+      "Desvio (%)": 80.94,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -333,9 +333,9 @@
     },
     {
       "Ticker": "VALE3.SA",
-      "Preço Atual": 84.32,
+      "Preço Atual": 87.84,
       "Preço Justo (Graham)": 87.77,
-      "Desvio (%)": -3.93,
+      "Desvio (%)": 0.08,
       "Sinal": "Manter",
       "Estratégias": [
         "Fundamentalista"
@@ -377,9 +377,9 @@
     },
     {
       "Ticker": "WEGE3.SA",
-      "Preço Atual": 51.72,
+      "Preço Atual": 51.99,
       "Preço Justo (Graham)": 13.65,
-      "Desvio (%)": 278.96,
+      "Desvio (%)": 280.94,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
