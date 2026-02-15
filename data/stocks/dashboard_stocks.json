@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-14T13:37:14.961304",
+  "updated_at": "2026-02-15T13:38:22.737978",
   "data": [
     {
       "Ticker": "AAPL",
@@ -25,8 +25,8 @@
     {
       "Ticker": "ABEV3.SA",
       "Preço Atual": 16.35,
-      "Preço Justo (Graham)": 10.86,
-      "Desvio (%)": 50.57,
+      "Preço Justo (Graham)": 10.85,
+      "Desvio (%)": 50.64,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -46,8 +46,8 @@
     {
       "Ticker": "BBAS3.SA",
       "Preço Atual": 25.43,
-      "Preço Justo (Graham)": 41.7,
-      "Desvio (%)": -39.01,
+      "Preço Justo (Graham)": 41.85,
+      "Desvio (%)": -39.23,
       "Sinal": "Comprar",
       "Estratégias": [
         "Fundamentalista",
