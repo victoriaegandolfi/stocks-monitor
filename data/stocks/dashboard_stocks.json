@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-15T13:38:22.737978",
+  "updated_at": "2026-02-16T13:58:29.540923",
   "data": [
     {
       "Ticker": "AAPL",
@@ -178,8 +178,8 @@
     {
       "Ticker": "JNJ",
       "Preço Atual": 243.45,
-      "Preço Justo (Graham)": 90.42,
-      "Desvio (%)": 169.23,
+      "Preço Justo (Graham)": 91.68,
+      "Desvio (%)": 165.56,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista",
