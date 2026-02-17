@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-16T13:58:29.540923",
+  "updated_at": "2026-02-17T13:59:46.016771",
   "data": [
     {
       "Ticker": "AAPL",
@@ -334,8 +334,8 @@
     {
       "Ticker": "VALE3.SA",
       "Preço Atual": 87.03,
-      "Preço Justo (Graham)": 52.05,
-      "Desvio (%)": 67.2,
+      "Preço Justo (Graham)": 52.07,
+      "Desvio (%)": 67.14,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
