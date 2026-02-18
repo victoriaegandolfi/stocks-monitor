@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-02-17T13:59:46.016771",
+  "updated_at": "2026-02-18T14:00:31.937869",
   "data": [
     {
       "Ticker": "AAPL",
-      "Preço Atual": 255.78,
-      "Preço Justo (Graham)": 32.65,
-      "Desvio (%)": 683.35,
+      "Preço Atual": 263.88,
+      "Preço Justo (Graham)": 32.63,
+      "Desvio (%)": 708.67,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -86,9 +86,9 @@
     },
     {
       "Ticker": "BRK-B",
-      "Preço Atual": 497.55,
-      "Preço Justo (Graham)": 18486.6,
-      "Desvio (%)": -97.31,
+      "Preço Atual": 503.41,
+      "Preço Justo (Graham)": 18474.79,
+      "Desvio (%)": -97.28,
       "Sinal": "Comprar",
       "Estratégias": [
         "Fundamentalista"
@@ -177,9 +177,9 @@
     },
     {
       "Ticker": "JNJ",
-      "Preço Atual": 243.45,
-      "Preço Justo (Graham)": 91.68,
-      "Desvio (%)": 165.56,
+      "Preço Atual": 243.33,
+      "Preço Justo (Graham)": 91.63,
+      "Desvio (%)": 165.54,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista",
@@ -199,9 +199,9 @@
     },
     {
       "Ticker": "KO",
-      "Preço Atual": 78.68,
+      "Preço Atual": 79.56,
       "Preço Justo (Graham)": 22.62,
-      "Desvio (%)": 247.89,
+      "Desvio (%)": 251.78,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -221,9 +221,9 @@
     },
     {
       "Ticker": "MSFT",
-      "Preço Atual": 401.32,
-      "Preço Justo (Graham)": 137.5,
-      "Desvio (%)": 191.87,
+      "Preço Atual": 396.86,
+      "Preço Justo (Graham)": 137.58,
+      "Desvio (%)": 188.45,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -273,9 +273,9 @@
     },
     {
       "Ticker": "PG",
-      "Preço Atual": 160.07,
+      "Preço Atual": 159.55,
       "Preço Justo (Graham)": 58.45,
-      "Desvio (%)": 173.87,
+      "Desvio (%)": 172.98,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -334,8 +334,8 @@
     {
       "Ticker": "VALE3.SA",
       "Preço Atual": 87.03,
-      "Preço Justo (Graham)": 52.07,
-      "Desvio (%)": 67.14,
+      "Preço Justo (Graham)": 52.2,
+      "Desvio (%)": 66.73,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -356,9 +356,9 @@
     },
     {
       "Ticker": "VZ",
-      "Preço Atual": 49.01,
+      "Preço Atual": 48.93,
       "Preço Justo (Graham)": 47.57,
-      "Desvio (%)": 3.03,
+      "Desvio (%)": 2.86,
       "Sinal": "Manter",
       "Estratégias": [
         "Dividendos"
