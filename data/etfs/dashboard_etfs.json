@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-22 13:36 UTC",
+  "updated_at": "2026-02-23 14:00 UTC",
   "data": [
     {
       "Ticker": "VUG",
@@ -80,13 +80,13 @@
     },
     {
       "Ticker": "BOVA11",
-      "Preço Atual": 186.69,
-      "Média 200d": 141.94,
-      "Distância MM (%)": 31.53,
-      "Distância Topo (%)": 0.0,
-      "CAGR 5y (%)": 11.63,
+      "Preço Atual": 185.49,
+      "Média 200d": 142.18,
+      "Distância MM (%)": 30.46,
+      "Distância Topo (%)": -0.64,
+      "CAGR 5y (%)": 10.97,
       "Max Drawdown (%)": -26.4,
-      "Volatilidade (%)": 18.22,
+      "Volatilidade (%)": 18.19,
       "Sinal": "REDUZIR"
     }
   ]
