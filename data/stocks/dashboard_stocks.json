@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-28T13:30:22.567649",
+  "updated_at": "2026-03-01T13:32:46.439064",
   "data": [
     {
       "Ticker": "AAPL",
@@ -378,8 +378,8 @@
     {
       "Ticker": "WEGE3.SA",
       "Preço Atual": 49.7,
-      "Preço Justo (Graham)": 13.65,
-      "Desvio (%)": 264.16,
+      "Preço Justo (Graham)": 12.03,
+      "Desvio (%)": 313.07,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
