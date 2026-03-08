@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-07T13:32:30.000751",
+  "updated_at": "2026-03-08T13:33:13.900389",
   "data": [
     {
       "Ticker": "AAPL",
@@ -46,8 +46,8 @@
     {
       "Ticker": "BBAS3.SA",
       "Preço Atual": 24.75,
-      "Preço Justo (Graham)": 41.67,
-      "Desvio (%)": -40.61,
+      "Preço Justo (Graham)": 41.85,
+      "Desvio (%)": -40.85,
       "Sinal": "Comprar",
       "Estratégias": [
         "Fundamentalista",
@@ -120,8 +120,8 @@
     {
       "Ticker": "ITSA4.SA",
       "Preço Atual": 13.32,
-      "Preço Justo (Graham)": 15.94,
-      "Desvio (%)": -16.44,
+      "Preço Justo (Graham)": 16.0,
+      "Desvio (%)": -16.74,
       "Sinal": "Comprar",
       "Estratégias": [
         "Dividendos"
@@ -149,8 +149,8 @@
     {
       "Ticker": "ITUB4.SA",
       "Preço Atual": 42.93,
-      "Preço Justo (Graham)": 40.65,
-      "Desvio (%)": 5.61,
+      "Preço Justo (Graham)": 40.91,
+      "Desvio (%)": 4.95,
       "Sinal": "Manter",
       "Estratégias": [
         "Fundamentalista"
@@ -243,8 +243,8 @@
     {
       "Ticker": "PETR4.SA",
       "Preço Atual": 42.11,
-      "Preço Justo (Graham)": 65.66,
-      "Desvio (%)": -35.87,
+      "Preço Justo (Graham)": 64.76,
+      "Desvio (%)": -34.97,
       "Sinal": "Comprar",
       "Estratégias": [
         "Dividendos"
@@ -334,8 +334,8 @@
     {
       "Ticker": "VALE3.SA",
       "Preço Atual": 78.86,
-      "Preço Justo (Graham)": 52.06,
-      "Desvio (%)": 51.48,
+      "Preço Justo (Graham)": 52.98,
+      "Desvio (%)": 48.84,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
